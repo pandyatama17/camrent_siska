@@ -11,6 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('clients.main');
+// });
+Route::get('/', 'ClientController@main');
+Route::get('quickview/{id}',[
+    'as'=>'quickView',
+    'uses'=> 'ClientController@quickView'
+]);
+Route::get('/store', 'ClientController@showItems');
+Route::get('/product/{id}', 'ClientController@showItem');
