@@ -26,8 +26,17 @@
  		<link rel="stylesheet" href="{{asset('electro/css/font-awesome.min.css')}}">
 
  		<!-- Custom stlylesheet -->
- 		<link type="text/css" rel="stylesheet" href="{{asset('electro/css/style.css')}}"/>
+		<link type="text/css" rel="stylesheet" href="{{asset('electro/css/style.css')}}"/>
+ 		<link type="text/css" rel="stylesheet" href="{{asset('datepicker/css/bootstrap-datepicker.css')}}"/>
+
+
+		<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.min.css"/>
 		<script src="{{asset('electro/js/jquery.min.js')}}"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+		<script src="{{asset('electro/js/bootstrap.min.js')}}"></script>
+		<script src="{{asset('datepicker/js/bootstrap-datepicker.min.js')}}"></script>
+		<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+		{{-- <script src="{{asset('sweetalert2-master/src/sweetalert2.js')}}"></script> --}}
 
 		<link rel="stylesheet" href="{{asset('adminlte/plugins/daterangepicker/daterangepicker.css')}}">
 		<script src="{{asset('adminlte/plugins/moment/moment.min.js')}}" charset="utf-8"></script>
@@ -110,45 +119,8 @@
 								<!-- /Wishlist -->
 
 								<!-- Cart -->
-								<div class="dropdown">
-									<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-										<i class="fa fa-shopping-cart"></i>
-										<span>Your Cart</span>
-										<div class="qty">3</div>
-									</a>
-									<div class="cart-dropdown">
-										<div class="cart-list">
-											<div class="product-widget">
-												<div class="product-img">
-													<img src="{{asset('images/items/10-1.jpg')}}" alt="">
-												</div>
-												<div class="product-body">
-													<h3 class="product-name"><a href="#">product name goes here</a></h3>
-													<h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
-												</div>
-												<button class="delete"><i class="fa fa-close"></i></button>
-											</div>
-
-											<div class="product-widget">
-												<div class="product-img">
-													<img src="{{asset('images/items/10-1.jpg')}}" alt="">
-												</div>
-												<div class="product-body">
-													<h3 class="product-name"><a href="#">product name goes here</a></h3>
-													<h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
-												</div>
-												<button class="delete"><i class="fa fa-close"></i></button>
-											</div>
-										</div>
-										<div class="cart-summary">
-											<small>3 Item(s) selected</small>
-											<h5>SUBTOTAL: $2940.00</h5>
-										</div>
-										<div class="cart-btns">
-											<a href="#">View Cart</a>
-											<a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
-										</div>
-									</div>
+								<div class="dropdown" id="cart">
+									@include('client.cart-dropdown')
 								</div>
 								<!-- /Cart -->
 
@@ -180,12 +152,12 @@
 				<div id="responsive-nav">
 					<!-- NAV -->
 					<ul class="main-nav nav navbar-nav">
-						<li class="active"><a href="#">Home</a></li>
+						<li @if (\Session::get('currentPage') == 'Home') class="active" @endif><a href="/">Home</a></li>
 						{{-- <li><a href="#">Hot Deals</a></li> --}}
-						<li><a href="/store">Store</a></li>
-            @foreach ($cats as $c)
+						<li @if (\Session::get('currentPage') == 'Store') class="active" @endif><a href="/store">Store</a></li>
+            {{-- @foreach ($cats as $c)
               <li><a href="#">{{$c->cat_name}}</a></li>
-            @endforeach
+            @endforeach --}}
 						<li>
 
             </li>
@@ -205,10 +177,20 @@
 				<!-- row -->
 				<div class="row">
 					<div class="col-md-12">
-						<h3 class="breadcrumb-header">Regular Page</h3>
+					<h3 class="breadcrumb-header">{{\Session::get('currentPage')}}</h3>
 						<ul class="breadcrumb-tree">
-							<li><a href="#">Home</a></li>
-							<li class="active">Blank</li>
+							@php
+								$last = count(\Session::get('crumbSteps'));
+								$i = 0;
+							@endphp
+							@foreach (\Session::get('crumbSteps') as $value => $key)
+								@php $i++ @endphp
+								@if ($i != $last)
+									<li><a href="{{$key}}">{{$value}}</a></li>
+								@else
+									<li class="active">{{$value}}</li>
+								@endif
+							@endforeach
 						</ul>
 					</div>
 				</div>
@@ -352,10 +334,20 @@
 			</div>
 			<!-- /bottom footer -->
 		</footer>
+		@if (\Session::has('message'))
+		    <script type="text/javascript">
+				Swal.fire({
+					position: 'top-end',
+					icon: 'success',
+					title: '{{Session::get('message')}}',
+					showConfirmButton: false,
+					timer: 2000
+				});
+		    </script>
+		@endif
 		<!-- /FOOTER -->
 
 		<!-- jQuery Plugins -->
-		<script src="{{asset('electro/js/bootstrap.min.js')}}"></script>
 		<script src="{{asset('electro/js/slick.min.js')}}"></script>
 		<script src="{{asset('electro/js/nouislider.min.js')}}"></script>
 		<script src="{{asset('electro/js/jquery.zoom.min.js')}}"></script>

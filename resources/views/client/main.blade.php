@@ -127,7 +127,7 @@
                         </div>
                         <div class="product-btns">
                           <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                          <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
+                          <button class="add-to-compare" data-url="/product/{{$n->id}}"><i class="fa fa-search"></i><span class="tooltipp">view details</span></button>
                           <button class="quick-view" class="btn btn-sm btn-info" data-url="{{ route('quickView',['id'=>$n->id])}}"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
                         </div>
                       </div>
@@ -185,7 +185,7 @@
                         </div>
                         <div class="product-btns">
                           <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                          <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
+                          <button class="add-to-compare" data-url="/product/{{$nd->id}}"><i class="fa fa-search"></i><span class="tooltipp">view details</span></a>
                           <button class="quick-view" class="btn btn-sm btn-info" data-url="{{ route('quickView',['id'=>$nd->id])}}"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
                         </div>
                       </div>
@@ -243,7 +243,7 @@
                         </div>
                         <div class="product-btns">
                           <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                          <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
+                          <button class="add-to-compare" data-url="/product/{{$nm->id}}"><i class="fa fa-search"></i><span class="tooltipp">view details</span></button>
                           <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
                         </div>
                       </div>
@@ -301,7 +301,7 @@
                         </div>
                         <div class="product-btns">
                           <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                          <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
+                          <button class="add-to-compare" data-url="/product/{{$nl->id}}"><i class="fa fa-search"></i><span class="tooltipp">view details</span></button>
                           <button class="quick-view" class="btn btn-sm btn-info" data-url="{{ route('quickView',['id'=>$nl->id])}}"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
                         </div>
                       </div>
@@ -501,7 +501,12 @@ $(document).ready(function(){
     $('.modal').on('hide.bs.modal', function (e)
     {
       $('.modal .modal-dialog').attr('class', 'modal-dialog  flipOutX  animated');
-    })
+    });
+
+      $('.add-to-compare').on('click', function() {
+        var url = $(this).closest('button').data('url');
+        window.location.href = url;
+      })
 });
 
 </script>

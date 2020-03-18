@@ -1,8 +1,41 @@
 @extends('layout.wrapper')
 @section('title','Product')
 @section('content')
-
-
+{{-- @include('client.add-to-cart') --}}
+<style media="screen">
+  .swal2-overflow {
+  overflow-x: visible;
+  overflow-y: visible;
+  }
+  .swal-wide{
+    width:50% !important;
+}
+  .swal2-icon.swal2-info , .swal2-icon.swal2-warning
+  {
+    font-size: 12pt!important;
+  }
+  .daterangepicker{
+    overflow-x: scroll;
+  }
+  .drp-calendar,
+  .table-condensed {
+      width: 275px;
+      height: 275px;
+      font-size: 7pt;
+  }
+  .vertical-alignment-helper {
+    display:table;
+    height: 100%;
+    width: 100%;
+    pointer-events:none; /* This makes sure that we can still click outside of the modal to close it */
+  }
+  .vertical-align-center {
+    /* To center vertically */
+    display: table-cell;
+    vertical-align: middle;
+    pointer-events:none;
+  }
+</style>
   <!-- SECTION -->
   <div class="section">
     <!-- container -->
@@ -95,7 +128,7 @@
             </div>
 
             <div class="add-to-cart">
-              <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+              <button id="addToCart" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
             </div>
 
             <ul class="product-btns">
@@ -416,4 +449,171 @@
     <!-- /container -->
   </div>
   <!-- /Section -->
+  <script type="text/javascript">
+    $(document).ready(function()
+    {
+      var startDate;
+      var endDate;
+      var price = {{$item->rent_price}};
+      var approxDate;
+      var approxPrice;
+      var rentPlan;
+      $("#addToCart").on('click',function() {
+        // $("#add-cart-modal").modal('show');
+        Swal.fire({
+          title: 'Rental Plan',
+          html: '<input id="datepicker" readonly class="swal2-input">'+
+                '<span id="reservation-text"></span>'+
+                '<span class="float-right" id="reservation-approx"></span`>',
+          customClass: 'swal2-overflow',
+          showCancelButton: true,
+          // showConfirmButton: false,
+          cancelButtonColor: "#DD6B55",
+          confirmButtonColor: "#8CD4F5",
+           onOpen:function(){
+            // Swal.disableConfirmButton();
+            $(".swal2-confirm").attr('disabled', 'disabled');
+            $('#datepicker').daterangepicker(
+               {
+                  startDate:moment(),
+                  minDate:moment(),
+                  dateLimit: { days: 14 },
+                  showWeekNumbers: true,
+                  applyClass: 'btn-small btn-primary',
+                  cancelClass: 'btn-small',
+                  format: 'DD/MM/YYYY',
+                  separator: ' to ',
+               },
+               function(start, end) {
+                console.log("Callback has been called!");
+                approxDate = (start.diff(end,'days')*-1) + ' days (' + start.format('D MMMM YYYY') + ' to ' + end.format('D MMMM YYYY') + ')';
+
+                var duit = price*(start.diff(end,'days')*-1);
+                var	number_string = duit.toString(),
+                 sisa 	= number_string.length % 3,
+                 rupiah 	= number_string.substr(0, sisa),
+                 ribuan 	= number_string.substr(sisa).match(/\d{3}/g);
+                if (ribuan) {
+                 separator = sisa ? '.' : '';
+                 rupiah += separator + ribuan.join('.');
+                }
+                approxPrice = '<span>approx.</span> Rp. ' + rupiah + ',00';
+                startDate = start;
+                endDate = end;
+                rentPlan = (start.diff(end,'days')*-1);
+               }
+            ).on('show.daterangepicker',function(e) {
+              var calendar = $(".daterangepicker.ltr.show-calendar").first();
+              var offset = (calendar[0]).getBoundingClientRect();
+              var width = calendar.width();
+              var height = calendar.height();
+
+              var window_height = $(window).height();
+              var window_width = $(window).width();
+
+              var centerX = offset.left - width / 4;    // [UPDATE] subtract to center
+              var centerY = offset.top - height / 20;   // [UPDATE] subtract to center
+
+              calendar.css('top',centerY);
+              calendar.css('left',centerX);
+
+            }).on('showCalendar.daterangepicker',function(e) {
+              var calendar = $(".daterangepicker.ltr.show-calendar").first();
+              var offset = (calendar[0]).getBoundingClientRect();
+              var width = calendar.width();
+              var height = calendar.height();
+
+              var window_height = $(window).height();
+              var window_width = $(window).width();
+
+              var centerX = offset.left - width / 4;    // [UPDATE] subtract to center
+              var centerY = offset.top - height / 20;   // [UPDATE] subtract to center
+
+              calendar.css('top',centerY);
+              calendar.css('left',centerX);
+
+            }).on('apply.daterangepicker',function(e) {
+              // Swal.update({ showConfirmButton:true})
+              // Swal.enableConfirmButton()
+              $(".swal2-confirm").removeAttr('disabled');
+            });
+          }
+        }).then(function(result) {
+        	if(result.value){
+        		Swal.fire({
+              title:'are  you sure?',
+              html :'<br>'+
+                    '<h2>{{$item->name}}</h2>'+
+                    '<br>'+
+                    '<h4>Rent Plan</h4>'+
+                    '<span>'+approxDate+'</span>'+
+                    '<br>'+
+                    '<br>'+
+                    '<h4>Approximated price</h4>'+
+                    '<span>'+approxPrice+'</span>',
+              icon: 'info',
+              customClass:'swal-wide',
+              showCancelButton: true,
+              confirmButtonColor: "#1FAB45",
+              buttonsStyling: true,
+              showLoaderOnConfirm: true,
+              preConfirm: function () {
+                return new Promise(function (resolve) {
+                  $.ajax({
+                    type: "PUT",
+                    headers: {
+                       'Accept': 'application/json',
+                       'Content-Type': 'application/json',
+                       'X-CSRF-TOKEN': "{{csrf_token()}}"
+                     },
+                    data: JSON.stringify(
+                      {
+                        'id': '{{$item->id}}',
+                        'plan':rentPlan,
+                        'start_date':startDate,
+                        'end_date':endDate
+                      }),
+                    url: "/add-to-cart",
+                    dataType: 'json',
+                  })
+                  // in case of successfully understood ajax response
+                    .done(function (data){
+                      // var obj = $.parseJSON(data);
+                      console.log(data);
+                      if (data.err == false) {
+                        //throw message
+                        Swal.fire("Added!",data.msg,"success");
+                        //reload cart start
+                        $.ajax({
+                            url: "{{url('reloadcart')}}",
+                            type: 'GET',
+                            dataType: 'html'
+                        })
+                        .success(function(data)
+                        {
+                            $('#cart').html(data);
+                        })
+                        .fail(function() {
+                          alert('error');
+                        });
+                        // reload cart end
+                      } else {
+                        Swal.fire("Oops!",data.msg,"error");
+                      }
+                    })
+                    .fail(function (error,e) {
+                      console.log(error);
+                      Swal.fire('Oops!', e, 'error');
+                    })
+
+                })
+              },
+            }).then(function () {
+
+              });
+        	}
+        });
+      });
+    })
+  </script>
 @endsection

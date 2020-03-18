@@ -78,7 +78,7 @@
   }
   .red
   {
-    background-color: rgba(216,0,0,1);
+    background-color: rgba(248,0,14,1);
   }
   #product-img-content
   {

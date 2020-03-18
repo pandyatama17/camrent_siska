@@ -1,6 +1,52 @@
 @extends('layout.wrapper')
 @section('title','store')
 @section('content')
+
+  <!-- jplist Core for PHP / ASP.NET -->
+  <link href="{{asset('jplist/dist/css/jplist.core.min.css')}}" rel="stylesheet" type="text/css" />
+  <script src="{{asset('jplist/dist/js/jplist.core.min.js')}}"></script>
+
+  <!-- jplist Sort Bundle -->
+  <script src="{{asset('jplist/dist/js/jplist.sort-bundle.min.js')}}"></script>
+
+  <!-- jplist Pagination Bundle -->
+  <link href="{{asset('jplist/dist/css/jplist.pagination-bundle.min.css')}}" rel="stylesheet" type="text/css" />
+  <script src="{{asset('jplist/dist/js/jplist.pagination-bundle.min.js')}}"></script>
+
+  <!-- Textbox Filter Control -->
+  <script src="{{asset('jplist/dist/js/jplist.textbox-filter.min.js')}}"></script>
+  <link href="{{asset('jplist/dist/css/jplist.textbox-filter.min.css')}}" rel="stylesheet" type="text/css" />
+
+  <!-- Toggle Filter Control -->
+  <script src="{{asset('jplist/dist/js/jplist.filter-toggle-bundle.min.js')}}"></script>
+  <link href="{{asset('jplist/dist/css/jplist.filter-toggle-bundle.min.css')}}" rel="stylesheet" type="text/css" />
+
+  <script>
+    $('document').ready(function(){
+      //check all jPList javascript options here
+      $('#store').jplist({
+        itemsBox: '.products',
+        itemPath: '.product-item',
+        panelPath: '.store-filter'
+      });
+      $('.checkbox-trigger').on('change',function()
+      {
+          var id = $(this).data('id');
+          var checked = $(this).prop('checked');
+          var kind = $(this).data('kind');
+          if (checked == true)
+          {
+            $('#checkbox-'+kind+'-main-'+id).prop('checked', true);
+            $('#checkbox-'+kind+'-main-'+id).trigger('change');
+          }
+          else if (checked == false)
+          {
+            $('#checkbox-'+kind+'-main-'+id).prop('checked', false);
+            $('#checkbox-'+kind+'-main-'+id).trigger('change');
+          }
+      })
+    });
+  </script>
   <!-- SECTION -->
   <div class="section">
     <!-- container -->
@@ -13,15 +59,21 @@
           <div class="aside">
             <h3 class="aside-title">Categories</h3>
             <div class="checkbox-filter">
+              @php
+                $index = 1
+              @endphp
               @foreach ($cats as $c)
                 <div class="input-checkbox">
-                  <input type="checkbox" id="category-1">
-                  <label for="category-1">
+                  <input type="checkbox" id="category-{{$index}}" data-id="{{$c->id}}" class="checkbox-trigger" data-kind="category">
+                  <label for="category-{{$index}}">
                     <span></span>
                     {{$c->cat_name}}
                     <small>({{\DB::table('items')->where('category', $c->id)->count()}})</small>
                   </label>
                 </div>
+                @php
+                  $index++;
+                @endphp
               @endforeach
             </div>
           </div>
@@ -56,7 +108,7 @@
               @endphp
               @foreach ($brands as $br)
                 <div class="input-checkbox">
-                  <input type="checkbox" id="brand-{{$index}}" value="brand-{{$br->id}}">
+                  <input type="checkbox" id="brand-{{$index}}" data-id="{{$br->id}}" value="brand-{{$br->id}}" class="checkbox-trigger" data-kind="brand">
                   <label for="brand-{{$index}}">
                     <span></span>
                     {{$br->brand_name}}
@@ -94,36 +146,82 @@
         <!-- STORE -->
         <div id="store" class="col-md-9">
           <!-- store top filter -->
-          <div class="store-filter clearfix">
-            <div class="store-sort">
-              <label>
-                Sort By:
-                <select class="input-select">
-                  <option value="0">Popular</option>
-                  <option value="1">Position</option>
-                </select>
-              </label>
+          <div class="store-filter clearfix jplist-panel panel-top">
+               <div
+               class="jplist-drop-down"
+               data-control-type="items-per-page-drop-down"
+               data-control-name="paging"
+               data-control-action="paging">
 
-              <label>
-                Show:
-                <select class="input-select" id="viewProduct">
-                  <option value="6">6</option>
-                  <option value="12">12</option>
-                </select>
-              </label>
+               <ul>
+                 <li><span data-number="3"> 3 per page </span></li>
+                 <li><span data-number="5"> 5 per page </span></li>
+                 <li><span data-number="10" data-default="true"> 10 per page </span></li>
+                 <li><span data-number="all"> view all </span></li>
+               </ul>
             </div>
-            <ul class="store-grid">
-              <li class="active"><i class="fa fa-th"></i></li>
-              <li><a href="#"><i class="fa fa-th-list"></i></a></li>
-            </ul>
+            <!-- pagination results -->
+            <div
+                    class="jplist-label"
+                    data-type="Page {current} of {pages}"
+                    data-control-type="pagination-info"
+                    data-control-name="paging"
+                    data-control-action="paging">
+            </div>
+
+            <!-- pagination control -->
+            <div
+            class="jplist-pagination"
+                data-control-type="pagination"
+                data-control-name="paging"
+                data-control-action="paging"
+                data-items-per-page="5"
+                >
+            </div>
+            <div
+               class="jplist-group"
+               data-control-type="checkbox-group-filter"
+               data-control-action="filter"
+               data-control-name="category"
+               style="visibility:hidden"
+            >
+               @foreach ($cats as $cat)
+                 <input
+                   data-path=".category-{{$cat->id}}"
+                   data-type="category"
+                   id="checkbox-category-main-{{$cat->id}}"
+                   type="checkbox" class="checkbox-main"
+                 />
+
+                 <label for="checkbox-main-{{$cat->cat_name}}">{{$cat->cat_name}}</label>
+               @endforeach
+             </div>
+             <div
+                class="jplist-group"
+                data-control-type="checkbox-group-filter"
+                data-control-action="filter"
+                data-control-name="brand"
+                style="visibility:hidden"
+                >
+                @foreach ($brands as $b)
+                  <input
+                    data-path=".brand-{{$b->id}}"
+                    data-type="brand"
+                    id="checkbox-brand-main-{{$b->id}}"
+                    type="checkbox" class="checkbox-main"
+                  />
+
+                  <label for="checkbox-brand-main-{{$b->brand_name}}">{{$b->brand_name}}</label>
+                @endforeach
+              </div>
           </div>
           <!-- /store top filter -->
 
           <!-- store products -->
-          <div class="row">
+          <div class="products row">
             @foreach ($items as $it)
               <!-- product -->
-              <div class="col-md-4 col-xs-6 child-item brand-{{$it->brand}}">
+              <div class="product-item col-md-4 col-xs-6 child-item">
                 <div class="product">
                   <div class="product-img">
                     <img src="{{asset('images/items/'.$it->id.'-1.jpg')}}" alt="">
@@ -132,8 +230,8 @@
                     </div>
                   </div>
                   <div class="product-body">
-                    <p class="product-category">{{\DB::table('categories')->where('id', $it->category)->pluck('cat_name')[0]}}</p>
-                    <h3 class="product-name"><a href="product/{{$it->id}}">{{$it->name}}</a></h3>
+                    <p class="product-category brand-{{$it->brand}}">{{\DB::table('categories')->where('id', $it->category)->pluck('cat_name')[0]}}</p>
+                    <h3 class="product-name category-{{$it->category}}"><a href="product/{{$it->id}}">{{$it->name}}</a></h3>
                     <h4 class="product-price">{{\App\Common::rupiah($it->rent_price)}}<small>/day</small></h4>
                     <div class="product-rating">
                       @if ($it->rating > 0)
@@ -179,11 +277,11 @@
           <!-- /store products -->
 
           <!-- store bottom filter -->
-          <div class="store-filter clearfix">
+          {{-- <div class="store-filter clearfix">
             <span class="store-qty">Showing 20-100 products</span>
             <ul class="store-pagination" id="pagin">
             </ul>
-          </div>
+          </div> --}}
           <!-- /store bottom filter -->
         </div>
         <!-- /STORE -->
@@ -193,53 +291,4 @@
     <!-- /container -->
   </div>
   <!-- /SECTION -->
-  <script type="text/javascript">
-    $(document).ready(function()
-    {
-      pageSize = 6;
-
-      countPage = function()
-      {
-        $("#pagin").empty();
-        var pageCount =  $(".child-item").length / pageSize;
-        for(var i = 0 ; i<pageCount;i++)
-        {
-          $("#pagin").append('<li><a href="#">'+(i+1)+'</a></li> ');
-        }
-      }
-
-      $("#viewProduct").on('change',function() {
-        pageSize = $(this).val();
-        var par = $(".active").find("a").trigger("click");
-        // var cur = $("#pagin .active").index();
-        countPage();
-        // showPage(cur + 1);
-      });
-
-      showPage = function(page)
-      {
-        $(".child-item").hide();
-        $(".child-item").each(function(n) {
-            if (n >= pageSize * (page - 1) && n < pageSize * page)
-                $(this).show();
-        });
-      }
-      countPage();
-      $("#pagin li").first().addClass("active");
-      showPage(1);
-
-      $("#pagin li a").click(function() {
-        $("#pagin li").removeClass("active");
-        $(this).parent().addClass("active");
-        showPage(parseInt($(this).text()))
-      });
-
-      $("#checkbox-filter :checkbox").click(function() {
-         $("div").hide();
-         $("#checkbox-filter :checkbox:checked").each(function() {
-             $("." + $(this).val()).show();
-         });
-      });
-    });
-  </script>
 @endsection

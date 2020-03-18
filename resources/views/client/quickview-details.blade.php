@@ -75,20 +75,19 @@
              <input type="text" class="form-control" id="reservation-range">
            </div>
          </div>
-
-     <div class="space-ten"></div>
-     <div class="col-md-12">
-       <h5 id="reservation-text"></h5>
-       <div class="space-ten"></div>
-       <h4 class="float-right" id="reservation-approx"></h4>
-       <div class="space-ten"></div>
-       <div class="btn-ground">
-         <button type="button" class="btn btn-primary"><span class="fa fa-shopping-cart"></span> Add To Cart</button>
-         <button type="button" class="btn btn-primary"><span class="fa fa-heart"></span> Add To Wishlist</button>
+         <div class="space-ten"></div>
+         <div class="col-md-12">
+           <h5 id="reservation-text"></h5>
+           <h4 class="float-right" id="reservation-approx"></h4>
+         </div>
        </div>
      </div>
-   </div>
- </div>
+     <div class="product-details product-content-item black text-center">
+       <div class="add-to-cart">
+         {{-- <button class="add-to-cart-btn"><i class="fa fa-heart-o"></i> add to wishlist</button> --}}
+         <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+       </div>
+     </div>
  </div>
 </div>
 <script type="text/javascript">
@@ -110,7 +109,6 @@ $(document).ready(function() {
        function(start, end) {
         console.log("Callback has been called!");
         $('#reservation-text').html((start.diff(end,'days')*-1) + ' days (' + start.format('D MMMM YYYY') + ' to ' + end.format('D MMMM YYYY') + ')');
-
         var duit = price*(start.diff(end,'days')*-1);
         var	number_string = duit.toString(),
       	sisa 	= number_string.length % 3,
@@ -120,11 +118,9 @@ $(document).ready(function() {
         	separator = sisa ? '.' : '';
         	rupiah += separator + ribuan.join('.');
         }
-
         $('#reservation-approx').html('<span>approx.</span> Rp. ' + rupiah + ',00')
-        tartDate = start;
+        startDate = start;
          endDate = end;
-
        }
     );
     //Set the initial state of the picker label

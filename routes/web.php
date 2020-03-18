@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,5 +20,31 @@ Route::get('quickview/{id}',[
     'as'=>'quickView',
     'uses'=> 'ClientController@quickView'
 ]);
+Route::get('/reloadcart', 'ClientController@reloadCart');
 Route::get('/store', 'ClientController@showItems');
 Route::get('/product/{id}', 'ClientController@showItem');
+Route::put('/add-to-cart', 'ClientController@addToCart');
+Route::delete('/remove-from-cart/{id}', 'ClientController@removeFromCart');
+Route::get('/flush', function()
+{
+  session()->forget('cart');
+  // return Redirect::to('/cart');
+  return Redirect::back()->with('message', 'Cart Cleared!');
+});
+Route::get('/sescheck', function()
+{
+  dd(Auth::user());
+  // return Auth::user()->id;
+});
+Route::get('/check', function()
+{
+  dd(session('cart'));
+  // if (null == session('cart'))
+  // {
+  //   return "kosong";
+  // }
+  // else
+  // {
+  //   return 'ada';
+  // }
+});
