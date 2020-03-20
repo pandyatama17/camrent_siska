@@ -98,6 +98,7 @@ class ComposerStaticInit2c6b3cacd081ffc3ecad1b4f49718eb3
         array (
             'League\\Flysystem\\' => 17,
             'League\\CommonMark\\' => 18,
+            'Laravel\\Ui\\' => 11,
             'Laravel\\Tinker\\' => 15,
         ),
         'J' => 
@@ -304,6 +305,10 @@ class ComposerStaticInit2c6b3cacd081ffc3ecad1b4f49718eb3
         array (
             0 => __DIR__ . '/..' . '/league/commonmark/src',
         ),
+        'Laravel\\Ui\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laravel/ui/src',
+        ),
         'Laravel\\Tinker\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/tinker/src',
@@ -389,6 +394,7 @@ class ComposerStaticInit2c6b3cacd081ffc3ecad1b4f49718eb3
         'App\\Http\\Controllers\\Auth\\VerificationController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/VerificationController.php',
         'App\\Http\\Controllers\\ClientController' => __DIR__ . '/../..' . '/app/Http/Controllers/ClientController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
         'App\\Http\\Middleware\\CheckForMaintenanceMode' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckForMaintenanceMode.php',
@@ -1947,6 +1953,13 @@ class ComposerStaticInit2c6b3cacd081ffc3ecad1b4f49718eb3
         'Laravel\\Tinker\\Console\\TinkerCommand' => __DIR__ . '/..' . '/laravel/tinker/src/Console/TinkerCommand.php',
         'Laravel\\Tinker\\TinkerCaster' => __DIR__ . '/..' . '/laravel/tinker/src/TinkerCaster.php',
         'Laravel\\Tinker\\TinkerServiceProvider' => __DIR__ . '/..' . '/laravel/tinker/src/TinkerServiceProvider.php',
+        'Laravel\\Ui\\AuthCommand' => __DIR__ . '/..' . '/laravel/ui/src/AuthCommand.php',
+        'Laravel\\Ui\\Presets\\Bootstrap' => __DIR__ . '/..' . '/laravel/ui/src/Presets/Bootstrap.php',
+        'Laravel\\Ui\\Presets\\Preset' => __DIR__ . '/..' . '/laravel/ui/src/Presets/Preset.php',
+        'Laravel\\Ui\\Presets\\React' => __DIR__ . '/..' . '/laravel/ui/src/Presets/React.php',
+        'Laravel\\Ui\\Presets\\Vue' => __DIR__ . '/..' . '/laravel/ui/src/Presets/Vue.php',
+        'Laravel\\Ui\\UiCommand' => __DIR__ . '/..' . '/laravel/ui/src/UiCommand.php',
+        'Laravel\\Ui\\UiServiceProvider' => __DIR__ . '/..' . '/laravel/ui/src/UiServiceProvider.php',
         'League\\CommonMark\\Block\\Element\\AbstractBlock' => __DIR__ . '/..' . '/league/commonmark/src/Block/Element/AbstractBlock.php',
         'League\\CommonMark\\Block\\Element\\AbstractStringContainerBlock' => __DIR__ . '/..' . '/league/commonmark/src/Block/Element/AbstractStringContainerBlock.php',
         'League\\CommonMark\\Block\\Element\\BlockQuote' => __DIR__ . '/..' . '/league/commonmark/src/Block/Element/BlockQuote.php',
@@ -4184,10 +4197,6 @@ class ComposerStaticInit2c6b3cacd081ffc3ecad1b4f49718eb3
         'Symfony\\Polyfill\\Mbstring\\Mbstring' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/Mbstring.php',
         'Symfony\\Polyfill\\Php72\\Php72' => __DIR__ . '/..' . '/symfony/polyfill-php72/Php72.php',
         'Symfony\\Polyfill\\Php73\\Php73' => __DIR__ . '/..' . '/symfony/polyfill-php73/Php73.php',
-        'Tests\\CreatesApplication' => __DIR__ . '/../..' . '/tests/CreatesApplication.php',
-        'Tests\\Feature\\ExampleTest' => __DIR__ . '/../..' . '/tests/Feature/ExampleTest.php',
-        'Tests\\TestCase' => __DIR__ . '/../..' . '/tests/TestCase.php',
-        'Tests\\Unit\\ExampleTest' => __DIR__ . '/../..' . '/tests/Unit/ExampleTest.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
         'TheSeer\\Tokenizer\\Exception' => __DIR__ . '/..' . '/theseer/tokenizer/src/Exception.php',
         'TheSeer\\Tokenizer\\NamespaceUri' => __DIR__ . '/..' . '/theseer/tokenizer/src/NamespaceUri.php',

@@ -34,7 +34,6 @@ Route::get('/flush', function()
 Route::get('/sescheck', function()
 {
   dd(Auth::user());
-  // return Auth::user()->id;
 });
 Route::get('/check', function()
 {
@@ -47,4 +46,10 @@ Route::get('/check', function()
   // {
   //   return 'ada';
   // }
+});
+
+Auth::routes();
+Route::get('/logout', function(){
+   Auth::logout();
+   return Redirect::to('login');
 });

@@ -28,7 +28,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -49,9 +49,13 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'birth_date' => 'required',
+            'phone' => ['required','numeric'],
+            'verification_file' => ['required','image','mimes:jpeg,jpg,bmp,png'],
         ]);
     }
 
@@ -63,10 +67,23 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $request = request();
+
+        $verificationFile = $request->file('verification_file');
+        $verificationFileSaveAsName = time() . $data['first_name'].$data['first_name']  . $verificationFile->getClientOriginalExtension();
+
+        $upload_path = 'images/verification/';
+        $verification_file_url = $upload_path . $verificationFileSaveAsName;
+        $success = $verificationFile->move($upload_path, $verificationFileSaveAsName);
+
         return User::create([
-            'name' => $data['name'],
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'birth_date' => $data['birth_date'],
+            'phone' => $data['phone'],
+            'verification_file' => $verification_file_url
         ]);
     }
 }
