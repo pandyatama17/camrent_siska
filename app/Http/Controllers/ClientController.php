@@ -78,6 +78,8 @@ class ClientController extends Controller
             'id'=>$item->id,
             "name" => $item->name,
             "plan" => $r->plan,
+            "start_date" => $r->start_date,
+            "end_date" => $r->end_date,
             "price" => $item->rent_price,
           ]
         ];
@@ -100,6 +102,8 @@ class ClientController extends Controller
         'id'=>$item->id,
         "name" => $item->name,
         "plan" => $r->plan,
+        "start_date" => $r->start_date,
+        "end_date" => $r->end_date,
         "price" => $item->rent_price,
       ];
       try
@@ -145,6 +149,13 @@ class ClientController extends Controller
           }
           echo json_encode($arr);
       }
+  }
+  public function checkout()
+  {
+    Session::flash('currentPage','Checkout');
+    Session::flash('crumbSteps',['home'=>'/','cart'=>'#', 'checkout' => 'checkout/']);
+
+    return view('client.checkout');
   }
 
 }

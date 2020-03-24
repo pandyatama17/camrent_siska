@@ -133,6 +133,9 @@
 		</style>
 </head>
 <body>
+	@if($errors->any())
+    {{ implode('', $errors->all('<div>:message</div>')) }}
+@endif
 	<div class="page-content">
 		<div class="form-v1-content">
 			<div class="wizard-form">
@@ -142,7 +145,7 @@
 						<img src="{{asset('electro/img/logo.png')}}" alt="">
 					</a>
 				</div>
-				<form id="form-register" class="form-register" method="POST" action="{{ route('register') }}">
+				<form id="form-register" class="form-register" method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
 					@csrf
 		        	<div id="form-total">
 		        		<!-- SECTION 1 -->
@@ -224,9 +227,9 @@
 								<div class="form-row">
 									<div class="form-holder form-holder-2">
 										<fieldset>
-											<label class="error" for="confirm"></label>
+											<label class="error" for="password_confirmation"></label>
 											<legend>Confirm Password</legend>
-											<input type="password" name="confirm" id="confirm" class="form-control" placeholder="" required>
+											<input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="" required>
 										</fieldset>
 									</div>
 								</div>
