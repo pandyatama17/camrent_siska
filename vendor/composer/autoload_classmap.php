@@ -34,6 +34,8 @@ return array(
     'App\\Providers\\EventServiceProvider' => $baseDir . '/app/Providers/EventServiceProvider.php',
     'App\\Providers\\GlobalVariable' => $baseDir . '/app/Providers/GlobalVariable.php',
     'App\\Providers\\RouteServiceProvider' => $baseDir . '/app/Providers/RouteServiceProvider.php',
+    'App\\Rent' => $baseDir . '/app/Rent.php',
+    'App\\RentDetail' => $baseDir . '/app/RentDetail.php',
     'App\\User' => $baseDir . '/app/User.php',
     'BrandsTableSeeder' => $baseDir . '/database/seeds/BrandsTableSeeder.php',
     'Carbon\\Carbon' => $vendorDir . '/nesbot/carbon/src/Carbon/Carbon.php',

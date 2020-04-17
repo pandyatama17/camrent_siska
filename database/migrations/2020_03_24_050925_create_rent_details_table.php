@@ -15,6 +15,14 @@ class CreateRentDetailsTable extends Migration
     {
         Schema::create('rent_details', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('parent_id');
+            $table->integer('item_id');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->integer('day_count');
+            $table->integer('overdue')->default(0);
+            $table->boolean('damaged')->default(false);
+            $table->enum('status',['0','1','2'])->default('0');
             $table->timestamps();
         });
     }

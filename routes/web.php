@@ -26,6 +26,8 @@ Route::get('/product/{id}', 'ClientController@showItem');
 Route::put('/add-to-cart', 'ClientController@addToCart');
 Route::delete('/remove-from-cart/{id}', 'ClientController@removeFromCart');
 Route::get('/checkout', 'ClientController@checkout');
+Route::post('/rent', 'ClientController@rent');
+Route::get('/invoice/{code}', 'ClientController@invoice');
 Route::get('/flush', function()
 {
   session()->forget('cart');

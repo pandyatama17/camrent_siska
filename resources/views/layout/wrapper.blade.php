@@ -89,7 +89,7 @@
 						<div class="col-md-3">
 							<div class="header-logo">
 								<a href="#" class="logo">
-									<img src="{{asset('electro/img/logo.png')}}" alt="">
+									<img src="{{asset('images/logo.png')}}" alt="">
 								</a>
 							</div>
 						</div>
@@ -359,6 +359,7 @@
 		<script src="{{asset('electro/js/nouislider.min.js')}}"></script>
 		<script src="{{asset('electro/js/jquery.zoom.min.js')}}"></script>
 		<script src="{{asset('electro/js/main.js')}}"></script>
+		<script src="{{asset('js/jquery.form.min.js')}}"></script>
 		<script type="text/javascript">
 		$.ajaxSetup({
 		    headers: {

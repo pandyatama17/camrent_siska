@@ -6,7 +6,12 @@ use Illuminate\Http\Request;
 use App\Item;
 use App\Category;
 use App\Brand;
+use App\Rent;
+use App\RentDetail;
+use App\User;
 use Session;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
@@ -158,4 +163,73 @@ class ClientController extends Controller
     return view('client.checkout');
   }
 
+  public function rent()
+  {
+    $this->middleware('user');
+
+    $request = request();
+
+    $assurance = 0;
+    $subtotal = 0;
+    foreach (Session::get('cart') as $cart)
+    {
+      $assurance += Item::find($cart['id'])->pluck('bail_price')[0];
+      $subtotal += $cart['plan']*$cart['price'];
+    }
+
+    $r = new Rent;
+    $r->code = strtoupper(Str::random(12));
+    $r->user_id = Auth::user()->id;
+    $r->subtotal = $subtotal;
+    $r->assurance = $assurance;
+    $r->total = $subtotal + $assurance;
+    $r->notes = $request['order_notes'];
+
+    try
+    {
+      $r->save();
+
+      $date = "";
+      foreach (Session::get('cart') as $cart)
+      {
+        $start_date = \Carbon\Carbon::parse($cart['start_date'])->format('Y-m-d');
+        $end_date = \Carbon\Carbon::parse($cart['end_date'])->format('Y-m-d');
+
+        $date .= "-------<br> start:".$start_date.'<br>end:'.$end_date.'<br>--------------';
+        RentDetail::create([
+            'parent_id' => $r->id,
+            'item_id' => $cart['id'],
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'day_count' => $cart['plan'],
+        ]);
+        // proses ngurangin stok
+        $it = Item::find($cart['id']);
+        $it->stock = (int)$it->stock - 1;
+        $it->save();
+      }
+      //hapus session cart
+      Session::forget('cart');
+
+      // return message success
+      $arr = array('err'=>false,'msg'=>'Order #'.$r->code.' Created!','redirect'=>$r->code);
+      echo json_encode($arr);
+    }
+    catch (\Exception $e)
+    {
+      // return message failed
+      $arr = array('err'=>true,'msg'=>'Invalid Proccess.'.$e->getMessage(),'redirect'=>"#");
+      echo json_encode($arr);
+    }
+  }
+  public function invoice($code)
+  {
+      $rent = Rent::where('code',$code)->first();
+      $user = User::find($rent->user_id);
+      $details = RentDetail::where('parent_id',$rent->id)->get();
+      Session::flash('currentPage','Product');
+      Session::flash('crumbSteps',['home'=>'/','rent'=>'#', $code => 'invoice/'.$code]);
+
+      return view('client.invoice')->with('rent', $rent)->with('user', $user)->with('details', $details);
+  }
 }

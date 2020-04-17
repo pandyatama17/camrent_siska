@@ -410,6 +410,8 @@ class ComposerStaticInit2c6b3cacd081ffc3ecad1b4f49718eb3
         'App\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/app/Providers/EventServiceProvider.php',
         'App\\Providers\\GlobalVariable' => __DIR__ . '/../..' . '/app/Providers/GlobalVariable.php',
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
+        'App\\Rent' => __DIR__ . '/../..' . '/app/Rent.php',
+        'App\\RentDetail' => __DIR__ . '/../..' . '/app/RentDetail.php',
         'App\\User' => __DIR__ . '/../..' . '/app/User.php',
         'BrandsTableSeeder' => __DIR__ . '/../..' . '/database/seeds/BrandsTableSeeder.php',
         'Carbon\\Carbon' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Carbon.php',

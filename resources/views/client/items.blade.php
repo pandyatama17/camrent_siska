@@ -360,7 +360,10 @@
                   showWeekNumbers: true,
                   applyClass: 'btn-small btn-primary',
                   cancelClass: 'btn-small',
-                  format: 'DD/MM/YYYY',
+                  locale: {
+          		          format: 'YYYY-MM-DD',
+          		    },
+          		    // format: 'DD/MM/YYYY',
                   separator: ' to ',
                },
                function(start, end) {
