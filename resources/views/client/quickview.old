@@ -1,0 +1,30 @@
+<style media="screen">
+  .product_view .modal-dialog{max-width: 800px; width: 100%;}
+  .pre-cost{text-decoration: line-through; color: #a5a5a5;}
+  .space-ten{padding: 10px 0;}
+  .modal-content{background-color: rgba(255,255,255,.7)}
+  .blur{filter: blur(5px) brightness(0.5);}
+</style>
+<div id="view-modal" class="modal flipInX product_view" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+     <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                     ×
+                  </button>
+                 <h4 class="modal-title"><i class="fa fa-camera"></i> Product Quick View</h4>
+            </div>
+            <div class="modal-body blur">
+                {{-- <div id="modal-loader" style="display: none; text-align: center;">
+                 <img src="ajax-loader.gif">
+                </div> --}}
+                <!-- content will be load here -->
+                <div id="dynamic-content"></div>
+
+             </div>
+             <div class="modal-footer">
+                   <button type="button" class="btn btn-default" data-dismiss="modal"> Close </button>
+             </div>
+         </div>
+      </div>
+</div><!-- /.modal -->
