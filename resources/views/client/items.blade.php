@@ -53,6 +53,9 @@
       vertical-align: middle;
       pointer-events:none;
     }
+    .prd-img{
+      height: 200px!important
+    }
   </style>
   <script>
     $('document').ready(function(){
@@ -257,7 +260,7 @@
               <div class="product-item col-md-4 col-xs-6 child-item">
                 <div class="product">
                   <div class="product-img">
-                    <img src="{{asset('images/items/'.$it->id.'-1.jpg')}}" alt="">
+                    <img src="{{asset('images/items/'.$it->id.'-1.jpg')}}" class="prd-img">
                     <div class="product-label">
                       <span class="new">NEW ({{$it->created_at->diffForHumans()}})</span>
                     </div>

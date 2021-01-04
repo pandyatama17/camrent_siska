@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>form-v1 by Colorlib</title>
+	<title>Camrent. | Register</title>
 	<!-- Mobile Specific Metas -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<!-- Font-->
@@ -142,7 +142,7 @@
 				<div class="title">
 					<a href="/login" class="back"><i class="zmdi zmdi-arrow-left"></i> back to login</a>
 					<a href="#" class="logo">
-						<img src="{{asset('electro/img/logo.png')}}" alt="">
+						<img src="{{asset('images/logo.png')}}" alt="">
 					</a>
 				</div>
 				<form id="form-register" class="form-register" method="POST" action="{{ route('register') }}" enctype="multipart/form-data">

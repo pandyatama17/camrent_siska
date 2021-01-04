@@ -36,6 +36,8 @@
 		<script src="{{asset('electro/js/bootstrap.min.js')}}"></script>
 		<script src="{{asset('datepicker/js/bootstrap-datepicker.min.js')}}"></script>
 		<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+		<script src="{{asset('/jquery.form.min.js')}}" charset="utf-8"></script>
+
 		{{-- <script src="{{asset('sweetalert2-master/src/sweetalert2.js')}}"></script> --}}
 
 		<link rel="stylesheet" href="{{asset('adminlte/plugins/daterangepicker/daterangepicker.css')}}">
@@ -115,7 +117,7 @@
 						<!-- ACCOUNT -->
 						<div class="col-md-3 clearfix">
 							<div class="header-ctn">
-								<!-- Wishlist -->
+								{{-- <!-- Wishlist -->
 								<div>
 									<a href="#">
 										<i class="fa fa-heart-o"></i>
@@ -123,7 +125,7 @@
 										<div class="qty">2</div>
 									</a>
 								</div>
-								<!-- /Wishlist -->
+								<!-- /Wishlist --> --}}
 
 								<!-- Cart -->
 								<div class="dropdown" id="cart">
@@ -162,6 +164,8 @@
 						<li @if (\Session::get('currentPage') == 'Home') class="active" @endif><a href="/">Home</a></li>
 						{{-- <li><a href="#">Hot Deals</a></li> --}}
 						<li @if (\Session::get('currentPage') == 'Store') class="active" @endif><a href="/store">Store</a></li>
+						<li><a href="{{route('tnc')}}">Terms & Conditions</a></li>
+						
             {{-- @foreach ($cats as $c)
               <li><a href="#">{{$c->cat_name}}</a></li>
             @endforeach --}}

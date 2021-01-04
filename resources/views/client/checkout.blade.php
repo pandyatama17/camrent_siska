@@ -4,7 +4,23 @@
   @php
     $total = 0;
     $assurance = 0;
+    $count = 0;
+    if (Session::get('cart')) {
+      foreach(Session::get('cart') as $c){
+        $count++;
+      };
+    }
+    $index = 1;
   @endphp
+  <style media="screen">
+    .swal2-modal{
+      width:50% !important;
+    }
+    .swal2-icon.swal2-info , .swal2-icon.swal2-warning
+    {
+      font-size: 12pt!important;
+    }
+  </style>
   <!-- SECTION -->
   <div class="section">
     <!-- container -->
@@ -24,6 +40,17 @@
               </div>
               <div class="order-products">
               @foreach (Session::get('cart') as $cart)
+                @php
+                  if ($index == 1) {
+                    $start_date = date("F d, Y", strtotime($cart['start_date']));
+                    echo "<input type='hidden' id='start_date' value='".$start_date."'>";
+                  }
+                  if ($index == $count) {
+                    $end_date = date("F d, Y", strtotime($cart['end_date']));
+                    echo "<input type='hidden' id='end_date' value='".$end_date."'>";
+                  }
+                  $index ++
+                @endphp
                 <div class="order-col">
                   <div>
                     <b>{{$cart['name']}}</b>
@@ -140,6 +167,73 @@
   <script type="text/javascript">
   $(document).ready(function ()
   {
+    $("body").on('submit','#checkoutForm',function(event)
+    {
+      event.preventDefault();
+			var form = $(this);
+			var action  = form.attr('action');
+			var data = form.formSerialize();
+      var start_date = $("#start_date").val();
+      var end_date = $("#end_date").val();
+
+      Swal.fire({
+				title: 'New Order',
+				html: 'Rent for '+start_date+' to '+end_date+' will be created',
+				icon: 'info',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				cancelButtonAriaLabel: 'Cancel'
+			}).then((result) =>
+			{
+			    if (result.value)
+					{
+					   form.ajaxSubmit(
+						 {
+						    url:action,
+							  type: 'POST',
+							  data : data,
+								beforeSend: function()
+								{
+			             $("#sectionLoader").show(250);
+			          },
+								success : function(response)
+								{
+								   var obj = $.parseJSON(response);
+									 if(obj.err == false)
+									 {
+										   Swal.fire(
+                         'Order Created!',
+                         obj.msg,
+                         'success'
+                       ).then(function() {
+                         window.location = obj.redirect;
+                       });
+									 }
+									 else {
+                     Swal.fire(
+                       'Failed to create order!',
+                       obj.msg,
+                       'error'
+                     ).then(function (prompt)
+                     {
+                       if (prompt.value) {
+                         window.location = obj.redirect;
+                       }
+                     });
+                   }
+                 },
+                 error: function(xhr, status, error){
+                   Swal.fire(
+                     'Oops..',
+                     'Server error',
+                     'error'
+                   );
+                 }
+            });
+          }
+       })
+    });
     // $('#checkoutForm-submit').click(function(e, params)
     // {
     //   var localParams = params || {};

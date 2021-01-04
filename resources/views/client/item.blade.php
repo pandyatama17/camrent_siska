@@ -9,7 +9,7 @@
   }
   .swal-wide{
     width:50% !important;
-}
+  }
   .swal2-icon.swal2-info , .swal2-icon.swal2-warning
   {
     font-size: 12pt!important;

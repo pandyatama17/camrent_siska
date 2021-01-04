@@ -15,6 +15,24 @@ use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
+    public function redirect()
+    {
+      if (Auth::user()->isadmin)
+      {
+        return redirect('/admin');
+      }
+      else
+      {
+        if (Auth::user()->user_type == 'tenant')
+        {
+          return redirect('/tenant');
+        }
+        else
+        {
+          return redirect('/');
+        }
+      }
+    }
     public function main()
     {
       $new = Item::where('category' ,'<', 3)->orderBy('id','desc')->take(8)->get();
@@ -83,8 +101,8 @@ class ClientController extends Controller
             'id'=>$item->id,
             "name" => $item->name,
             "plan" => $r->plan,
-            "start_date" => $r->start_date,
-            "end_date" => $r->end_date,
+            "start_date" => \Carbon\Carbon::parse($r->start_date)->addDays(1)->format("Y-m-d"),
+            "end_date" => \Carbon\Carbon::parse($r->end_date)->format("Y-m-d"),
             "price" => $item->rent_price,
           ]
         ];
@@ -166,7 +184,7 @@ class ClientController extends Controller
   public function rent()
   {
     $this->middleware('user');
-
+    $err = false;
     $request = request();
 
     $assurance = 0;
@@ -192,35 +210,47 @@ class ClientController extends Controller
       $date = "";
       foreach (Session::get('cart') as $cart)
       {
-        $start_date = \Carbon\Carbon::parse($cart['start_date'])->format('Y-m-d');
-        $end_date = \Carbon\Carbon::parse($cart['end_date'])->format('Y-m-d');
+        $start_date = \Carbon\Carbon::parse($cart['start_date']);
+        $start_date->setTimezone('Asia/Jakarta')->format('Y-m-d');
+        $end_date = \Carbon\Carbon::parse($cart['end_date']);
+        $end_date->setTimezone('Asia/Jakarta')->format('Y-m-d');
 
-        $date .= "-------<br> start:".$start_date.'<br>end:'.$end_date.'<br>--------------';
-        RentDetail::create([
-            'parent_id' => $r->id,
-            'item_id' => $cart['id'],
-            'start_date' => $start_date,
-            'end_date' => $end_date,
-            'day_count' => $cart['plan'],
-        ]);
-        // proses ngurangin stok
-        $it = Item::find($cart['id']);
-        $it->stock = (int)$it->stock - 1;
-        $it->save();
+        // $date .= "-------<br> start:".$start_date.'<br>end:'.$end_date.'<br>--------------';
+        try {
+          RentDetail::create([
+              'parent_id' => $r->id,
+              'item_id' => $cart['id'],
+              'start_date' => $start_date,
+              'end_date' => $end_date,
+              'day_count' => $cart['plan'],
+          ]);
+          // proses ngurangin stok
+          $it = Item::find($cart['id']);
+          // $it->stock = (int)$it->stock - 1;
+          $it->available = false;
+          $it->rented_times += 1;
+          $it->save();
+        } catch (\Exception $e) {
+          $err = true;
+          $msg = 'Item : '.$it->code.'. error : '.$e->getMessage();
+        }
       }
       //hapus session cart
       Session::forget('cart');
-
-      // return message success
-      $arr = array('err'=>false,'msg'=>'Order #'.$r->code.' Created!','redirect'=>$r->code);
-      echo json_encode($arr);
     }
     catch (\Exception $e)
     {
       // return message failed
-      $arr = array('err'=>true,'msg'=>'Invalid Proccess.'.$e->getMessage(),'redirect'=>"#");
-      echo json_encode($arr);
+      $err = true;
+      $msg = 'error : '.$e->getMessage();
     }
+    if ($err == true) {
+      $arr = array('err'=>true,'msg'=>'Invalid Proccess. '.$msg,'redirect'=>"#");
+    }
+    else {
+      $arr = array('err'=>false,'msg'=>'Order #'.$r->code.' Created!','redirect'=>route('invoice',$r->code));
+    }
+    echo json_encode($arr);
   }
   public function invoice($code)
   {
@@ -231,5 +261,9 @@ class ClientController extends Controller
       Session::flash('crumbSteps',['home'=>'/','rent'=>'#', $code => 'invoice/'.$code]);
 
       return view('client.invoice')->with('rent', $rent)->with('user', $user)->with('details', $details);
+  }
+  public function tnc()
+  {
+    return view('client.tnc');
   }
 }
